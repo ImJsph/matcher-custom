@@ -33,7 +33,7 @@ function App() {
 
     // post request to backend (/match_custom) for custom job matching
     try {
-      const res = await axios.post("http://localhost:5001/match_custom", formData);
+      const res = await axios.post("https://matcher-custom.onrender.com/", formData);
       // save backend response (match score + keywords) into state
       setCustomResult(res.data);
     } catch (err) {
