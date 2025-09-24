@@ -4,4 +4,7 @@ pandas
 PyMuPDF
 scikit-learn
 sentence-transformers
+torch==2.2.2+cpu
+torchvision==0.17.2+cpu
+-f https://download.pytorch.org/whl/torch_stable.html
 gunicorn
