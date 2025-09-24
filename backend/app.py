@@ -39,7 +39,7 @@ def extract_resume_text(pdf_path):
 ### BERT MODEL ###
 
 # load pre-trained BERT sentence transformer
-bert_model = SentenceTransformer("sentence-transformers/paraphrase-MiniLM-L3-v2")
+bert_model = SentenceTransformer("./model")
 
 
 ### CUSTOM JOB DESCRIPTION MATCH ROUTE ###
