@@ -4,3 +4,4 @@ pandas
 PyMuPDF
 scikit-learn
 sentence-transformers
+gunicorn
