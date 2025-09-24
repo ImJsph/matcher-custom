@@ -1,0 +1,6 @@
+Flask
+flask-cors
+pandas
+PyMuPDF
+scikit-learn
+sentence-transformers
