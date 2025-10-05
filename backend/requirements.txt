@@ -1,7 +1,8 @@
 flask
 flask-cors
 PyMuPDF
-sentence-transformers
+sentence-transformers==2.2.2
 scikit-learn
 numpy
 gunicorn
+# Note: torch installed separately from cpu index in Dockerfile or via extra-index below
