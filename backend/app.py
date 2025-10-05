@@ -10,8 +10,7 @@ import re
 from sklearn.metrics.pairwise import cosine_similarity
 # sentence-transformers is a Hugging Face library that lets us use BERT-like models to generate embeddings for text
 from sentence_transformers import SentenceTransformer
-import logging,os
-
+import logging, os
 
 # Load SentenceTransformer model (cached if available)
 if os.path.exists("/app/cached_model"):
@@ -19,45 +18,39 @@ if os.path.exists("/app/cached_model"):
 else:
     bert_model = SentenceTransformer("all-MiniLM-L6-v2")
 
-
-
-### APP INITILIZATION + CORS ###
+### APP INITIALIZATION + CORS ###
 
 # initialize the Flask app
-
 logging.basicConfig(level=logging.INFO)
 app = Flask(__name__)
+
+# allow frontend (React) to communicate with this backend API
+CORS(app)  # allow all origins by default
 
 @app.route("/health")
 def health():
     logging.info("Health check requested")
-    return jsonify({"status": "ok"})
-
-# allow frontend (React) to communicate with this backend API
-CORS(app)
-
+    return jsonify({"status": "ok"}), 200  # explicit 200 response
 
 ### TEXT TOOLS ###
 
 # normalize text: lowercase, remove punctuation/symbols, trim whitespace
 def normalize_text(text):
-   if not isinstance(text, str):
-       return ""
-   text = text.lower()
-   text = re.sub(r"\W+", " ", text)
-   return text.strip()
+    if not isinstance(text, str):
+        return ""
+    text = text.lower()
+    text = re.sub(r"\W+", " ", text)
+    return text.strip()
 
 # extract text from uploaded resume PDF
 def extract_resume_text(pdf_path):
-   doc = fitz.open(pdf_path)
-   return " ".join([page.get_text() for page in doc])
-
+    doc = fitz.open(pdf_path)
+    return " ".join([page.get_text() for page in doc])
 
 ### BERT MODEL ###
 
 # load pre-trained BERT sentence transformer
 bert_model = SentenceTransformer("all-MiniLM-L6-v2")
-
 
 ### CUSTOM JOB DESCRIPTION MATCH ROUTE ###
 
@@ -65,7 +58,9 @@ bert_model = SentenceTransformer("all-MiniLM-L6-v2")
 def match_custom():
     try:
         # get resume from uploaded file
-        file = request.files["resume"]
+        file = request.files.get("resume")
+        if not file:
+            return jsonify({"error": "Missing resume file"}), 400
         file.save("uploaded_resume.pdf")
         resume_text = extract_resume_text("uploaded_resume.pdf")
         resume_text = normalize_text(resume_text)
@@ -90,7 +85,7 @@ def match_custom():
         matched_keywords = sorted(resume_words & job_words)[:10]   # cap at 10
         suggested_keywords = sorted(job_words - resume_words)[:10] # cap at 10
 
-        print("✅ Custom job description matching complete.")
+        logging.info("✅ Custom job description matching complete.")
 
         return jsonify({
             "job_description": job_text,
@@ -100,10 +95,11 @@ def match_custom():
         })
 
     except Exception as e:
-        print("❌ Error in /match_custom:", str(e))
+        logging.error("❌ Error in /match_custom: %s", str(e))
         return jsonify({"error": str(e)}), 500
-
 
 # start running the flask app
 if __name__ == "__main__":
-   app.run(debug=True, host="0.0.0.0", port=5001)
+    # use Render's PORT environment variable if available, otherwise fallback to 5001 for local testing
+    port = int(os.environ.get("PORT", 5001))
+    app.run(debug=True, host="0.0.0.0", port=port)
