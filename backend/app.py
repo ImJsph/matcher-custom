@@ -10,12 +10,29 @@ import re
 from sklearn.metrics.pairwise import cosine_similarity
 # sentence-transformers is a Hugging Face library that lets us use BERT-like models to generate embeddings for text
 from sentence_transformers import SentenceTransformer
+import logging,os
+
+
+# Load SentenceTransformer model (cached if available)
+if os.path.exists("/app/cached_model"):
+    bert_model = SentenceTransformer("/app/cached_model")
+else:
+    bert_model = SentenceTransformer("all-MiniLM-L6-v2")
+
 
 
 ### APP INITILIZATION + CORS ###
 
 # initialize the Flask app
+
+logging.basicConfig(level=logging.INFO)
 app = Flask(__name__)
+
+@app.route("/health")
+def health():
+    logging.info("Health check requested")
+    return jsonify({"status": "ok"})
+
 # allow frontend (React) to communicate with this backend API
 CORS(app)
 
