@@ -20,4 +20,4 @@ RUN pip install -r requirements.txt
 # RUN python - <<'PY'\nfrom sentence_transformers import SentenceTransformer\nSentenceTransformer("all-MiniLM-L6-v2").save("/app/cached_model")\nPY
 
 ENV PORT 8000
-CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:8000", "--workers", "1"]
+CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:8000", "--workers", "1", "--timeout", "180"]
