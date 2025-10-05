@@ -33,7 +33,11 @@ function App() {
 
     // post request to backend (/match_custom) for custom job matching
     try {
-      const res = await axios.post("http://localhost:5001/match_custom", formData);
+      const BASE = process.env.REACT_APP_BACKEND_URL || "http://localhost:5001";
+      const res = await axios.post(`${BASE}/match_custom`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+      timeout: 120000,
+    });
       // save backend response (match score + keywords) into state
       setCustomResult(res.data);
     } catch (err) {

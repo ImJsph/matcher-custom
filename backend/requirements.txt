@@ -1,0 +1,7 @@
+flask
+flask-cors
+PyMuPDF
+sentence-transformers
+scikit-learn
+numpy
+gunicorn
