@@ -1,7 +1,3 @@
-# Resume_Matcher
-An app aimed at matching resumes with job descriptions. This is the first iteration/rough draft
-
-diagram of the pipeline:
 +--------------------+
 |   User Interface   |
 +--------------------+
@@ -21,7 +17,7 @@ diagram of the pipeline:
    handleUpload()
    -----------------
    - Packages file into FormData
-   - Sends POST request -> Flask backend (/match)
+   - Sends POST request → Flask backend (/match)
         |
         v
 +------------------------+
@@ -32,13 +28,17 @@ diagram of the pipeline:
    - Encodes resume with BERT
    - Compares with job embeddings
    - Returns JSON:
-       { matches, matched_keywords, suggested_keywords }
+       {
+         matches,
+         matched_keywords,
+         suggested_keywords
+       }
         |
         v
 +--------------------+
 |  React Frontend    |
 +--------------------+
-   res.data ->
+   res.data →
    - setResults(res.data.matches)
    - setMatched(res.data.matched_keywords)
    - setSuggested(res.data.suggested_keywords)
